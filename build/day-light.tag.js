@@ -1,0 +1,50 @@
+document.head.insertAdjacentHTML('beforeend', `<template id="day-light"><style>svg{width:200px;transform-origin:50% 50%;background:transparent}path{fill:orange}circle{fill:#222}</style><svg viewbox="0 0 100 100" preserveaspectratio="xMinYMin"><circle cx="50" cy="50" r="50"/><path/></svg></template>`);
+			window.customElements.define('day-light', class extends HTMLElement {
+				constructor() {
+					super();
+					this.attachShadow({mode: 'open'}).appendChild(document.querySelector('template#day-light').content.cloneNode(true));
+					
+				}
+				$(q){return this.shadowRoot.querySelector(q)}
+				
+			 	
+	connectedCallback() {
+		var deg = 180*this.getAttribute('pc')/100;
+		var sunrise = this.getTime(this.getAttribute('sunrise'));
+		var sunset = this.getTime(this.getAttribute('sunset'));
+		// console.log('deg',deg,sunrise,sunset);
+		if(sunrise)
+			var day = this.pieSlice(50,50,50, sunrise*15-180,sunset*15-180);
+		else
+			var day = this.pieSlice(50,50,50, -deg,deg);
+	    this.$('path').setAttribute('d', day);
+	}
+	getTime(t){
+		if(!t) return;
+		var tmp = t.split(':');
+		return (tmp[0]*1 + tmp[1]/60).toFixed(2);
+	}
+
+
+	pieSlice(x, y, radius, startAngle, endAngle) {
+		// https://stackoverflow.com/questions/5736398/how-to-calculate-the-svg-path-for-an-arc-of-a-circle
+		var polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+		    var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+		    return {
+		        x: centerX + (radius * Math.cos(angleInRadians)),
+		        y: centerY + (radius * Math.sin(angleInRadians))
+		    };
+		}
+	    var start = polarToCartesian(x, y, radius, endAngle);
+	    var end = polarToCartesian(x, y, radius, startAngle);
+	    var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+	    var d = [
+	        "M", x, y,
+	        "L", start.x, start.y,
+	        "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+	        "L", x, y,
+	    ].join(" ");
+	    return d;
+	}
+
+			});
