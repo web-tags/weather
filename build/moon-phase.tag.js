@@ -7,7 +7,7 @@ document.head.insertAdjacentHTML('beforeend', `<template id="moon-phase"><style>
 				}
 				$(q){return this.shadowRoot.querySelector(q)}
 				
-			 	
+			 	 
 	static get observedAttributes() { return ['value']; }
 	attributeChangedCallback() {
 		var phase = this.getAttribute('value')*1;
@@ -18,13 +18,19 @@ document.head.insertAdjacentHTML('beforeend', `<template id="moon-phase"><style>
 		var viewPointRotation = 0;
 		if(this.hasAttribute('A')) viewPointRotation = 90;
 		if(this.hasAttribute('S')) viewPointRotation = 180;
+		var rotation = viewPointRotation+phaseRotation;
 
 		var complete = phase < 50 ? phase*2 : 200-phase*2;
 		var r1 = 0; var l1 = 0;
 		if(complete>50) l1 = (complete-50);
 		else r1 = (50-complete);
 
-		this.$('svg').setAttribute('transform',`rotate(${viewPointRotation+phaseRotation})`);
+		// console.log('phase',phase, 'rot',rotation);
+
+		this.$('svg').setAttribute('style',`transform: rotate(${rotation}deg);`);
+		// this.$('svg').style.transform = `rotate(50deg);`;
+		// this.style.background = `red`;
+		// this.$('svg').setAttribute('transform',`rotate(${rotation})`);
 		this.setPath('r0',50,1);
 		this.setPath('r1',r1,1);
 		this.setPath('l0',50,0);
