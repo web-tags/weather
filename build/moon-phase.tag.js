@@ -8,35 +8,45 @@ document.head.insertAdjacentHTML('beforeend', `<template id="moon-phase"><style>
 				$(q){return this.shadowRoot.querySelector(q)}
 				
 			 	
-	connectedCallback(){
-		// var hemisphere = this.hasAttribute('S') ? 'S' : 'N';
-		var viewPointRotation = this.hasAttribute('S') ? 180 : 0;
+	static get observedAttributes() { return ['value']; }
+	attributeChangedCallback() {
 		var phase = this.getAttribute('value')*1;
-		if(phase < 50){ // waxing
-			this.$('svg').setAttribute('transform',`rotate(${viewPointRotation})`);
-			var complete = phase*2;
+		var phaseRotation = phase < 50 ? 0 : 180;
+		// console.log('phase',phase);
+		if(!phase)return;
 
-		} else { // waning
-			this.$('svg').setAttribute('transform',`rotate(${viewPointRotation+180})`);
-			var complete = 200 - phase*2;
-		}
-		// var direction = phase < 50 ? 'waxing' : 'waning';
+		var viewPointRotation = 0;
+		if(this.hasAttribute('A')) viewPointRotation = 90;
+		if(this.hasAttribute('S')) viewPointRotation = 180;
+
+		var complete = phase < 50 ? phase*2 : 200-phase*2;
 		var r1 = 0; var l1 = 0;
 		if(complete>50) l1 = (complete-50);
 		else r1 = (50-complete);
-		// console.log('x',phase, complete, r1, l1);
 
+		this.$('svg').setAttribute('transform',`rotate(${viewPointRotation+phaseRotation})`);
 		this.setPath('r0',50,1);
 		this.setPath('r1',r1,1);
-
 		this.setPath('l0',50,0);
 		this.setPath('l1',l1,0);
-
-		// if(this.hasAttribute('waxing')) 
-		// 	this.$('svg').setAttribute('transform',"rotate(180)");
 	}
 	setPath(id,rad,mirror){
 		this.$('#'+id).setAttribute('d',`M50,0 A${rad},50 0,0,${mirror} 50,100 z`);
 	}
+
+	// connectedCallback(){
+		// if(phase < 50){ // waxing
+		// 	this.$('svg').setAttribute('transform',`rotate(${viewPointRotation})`);
+		// 	var complete = phase*2;
+		// } else { // waning
+		// 	this.$('svg').setAttribute('transform',`rotate(${viewPointRotation+180})`);
+		// 	var complete = 200 - phase*2;
+		// }
+		// var hemisphere = this.hasAttribute('S') ? 'S' : 'N';
+		// var viewPointRotation = this.hasAttribute('S') ? 180 : 0;
+		// console.log('x',phase, complete, r1, l1);
+		// var direction = phase < 50 ? 'waxing' : 'waning';
+		// if(this.hasAttribute('waxing')) 
+		// 	this.$('svg').setAttribute('transform',"rotate(180)");
 
 			});

@@ -5,21 +5,41 @@
 
 <h1>moon-phase</h1>
 <moon-phase value='12' N></moon-phase>
+<br/>
+<input type="range" min="1" max="100" value="12" id="moon">
 <!-- latitude='52' date='2018-03-11' -->
 <!-- waxing complete='20' -->
 
 <h1>day-light</h1>
 <day-light sunrise='6:57' sunset='20:06'></day-light>
+<br/>
+<input id='sunrise' value="6:57" />
+<input id='sunset' value="20:06" />
 <!-- pc='35'  -->
 
 
 <style type="text/css">
 	body{text-align: center;}
-	h1{color: white;}
-	body{background: #555;}
+	h1{font:300 5vw Helvetica;}
+	/*h1{color: white;}*/
+	/*body{background: #555;}*/
 	/*svg{width: 200px;}*/
 	/*circle{stroke: red; fill: orange; 	*/
+	#sunrise,#sunset{
+		font-size: 25px;
+		width: 80px;
+	}
 }
 </style>
 
-
+<script>
+	document.querySelector('#moon').addEventListener('input',e=>{
+		document.querySelector('moon-phase').setAttribute('value',e.target.value);
+	});
+	document.querySelector('#sunrise').addEventListener('input',e=>{
+		document.querySelector('day-light').setAttribute('sunrise',e.target.value);
+	});
+	document.querySelector('#sunset').addEventListener('input',e=>{
+		document.querySelector('day-light').setAttribute('sunset',e.target.value);
+	});
+</script>

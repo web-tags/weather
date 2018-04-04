@@ -8,12 +8,17 @@ document.head.insertAdjacentHTML('beforeend', `<template id="day-light"><style>s
 				$(q){return this.shadowRoot.querySelector(q)}
 				
 			 	
-	connectedCallback() {
-		var deg = 180*this.getAttribute('pc')/100;
+	static get observedAttributes() { return ['value','sunrise','sunset']; }
+	attributeChangedCallback() {
+	// connectedCallback() {
+		var deg = this.getAttribute('value')*180/100;
 		var sunrise = this.getTime(this.getAttribute('sunrise'));
 		var sunset = this.getTime(this.getAttribute('sunset'));
+		if(sunrise>12) sunrise = 11;
+		if(sunset<12) sunset = 13;
+		console.log('day-',deg,'r',sunrise,'s',sunset);
 		// console.log('deg',deg,sunrise,sunset);
-		if(sunrise)
+		if(sunrise&&sunset)
 			var day = this.pieSlice(50,50,50, sunrise*15-180,sunset*15-180);
 		else
 			var day = this.pieSlice(50,50,50, -deg,deg);
