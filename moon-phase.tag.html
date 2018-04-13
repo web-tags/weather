@@ -9,7 +9,7 @@
 
 
 
-<script $> 
+<script $>   
 	static get observedAttributes() { return ['value']; }
 	attributeChangedCallback() {
 		var phase = this.getAttribute('value')*1;
@@ -27,7 +27,7 @@
 		if(complete>50) l1 = (complete-50);
 		else r1 = (50-complete);
 
-		// console.log('phase',phase, 'rot',rotation);
+		console.log('phase',phase, 'rot',rotation);
 
 		this.$('svg').setAttribute('style',`transform: rotate(${rotation}deg);`);
 		// this.$('svg').style.transform = `rotate(50deg);`;
